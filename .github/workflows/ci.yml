@@ -47,7 +47,7 @@ jobs:
     - name: Install requirements
       run: |
         pip install wheel
-        pip install -r requirements.txt
+        pip install -r test-requirements.txt
       working-directory: ${{ env.namespace }}/${{ env.collection }}
 
     - name: Run molecule
