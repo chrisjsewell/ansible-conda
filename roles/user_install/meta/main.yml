@@ -1,5 +1,3 @@
-version: 2
-
 galaxy_info:
   description: Install the Conda package manager for a specific user.
   license: MIT

@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  namespace: "chrisjsewell"
+  collection: "conda"
+
+jobs:
+
+  pre-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+    - uses: pre-commit/action@v2.0.0
+
+  molecule:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro: [ubuntu1804, ubuntu2004]
+      fail-fast: false
+
+    steps:
+
+    - uses: actions/checkout@v3
+      with:
+        path: ${{ env.namespace }}/${{ env.collection }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+
+    - name: Upgrade pip
+      run: pip install --upgrade pip
+
+    - name: Install requirements
+      run: |
+        pip install wheel
+        pip install -r requirements.txt
+      working-directory: ${{ env.namespace }}/${{ env.collection }}
+
+    - name: Run molecule
+      run: molecule test
+      working-directory: ${{ env.namespace }}/${{ env.collection }}
+      env:
+        MOLECULE_DISTRO: ${{ matrix.distro }}

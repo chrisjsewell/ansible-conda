@@ -1,0 +1,4 @@
+# note we install ansible instead of ansible-core, to include some collections
+# ansible-core~=2.13.0
+ansible~=6.4.0
+molecule[docker]~=4.0
