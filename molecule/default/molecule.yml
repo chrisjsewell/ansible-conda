@@ -1,0 +1,33 @@
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+- name: instance
+  image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu1804}-ansible:latest"
+  # by default the container will initialise with systemd as PID1
+  command: ${MOLECULE_DOCKER_COMMAND:-""}
+  volumes:
+  # required if using systemd to manage services
+  - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  privileged: true
+  pre_build_image: true
+  env:
+    LC_ALL: "en_US.UTF-8"
+    LANG: "en_US.UTF-8"
+provisioner:
+  name: ansible
+  # log: true  # for debugging
+  playbooks:
+    converge: converge.yml
+    # verify: verify.yml
+  config_options:
+    defaults:
+      # https://docs.ansible.com/ansible/latest/plugins/callback.html#setting-a-callback-plugin-for-ad-hoc-commands
+      bin_ansible_callbacks: true
+      # https://docs.ansible.com/ansible/latest/collections/community/general/yaml_callback.html
+      stdout_callback: community.general.yaml
+      # TODO ansible.posix appears to not be included in ansible
+      # https://docs.ansible.com/ansible/latest/collections/ansible/posix/profile_tasks_callback.html
+      # callbacks_enabled:
+      # - ansible.posix.profile_tasks

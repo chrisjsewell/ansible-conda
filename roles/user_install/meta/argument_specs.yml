@@ -1,0 +1,36 @@
+argument_specs:
+
+  main:
+    short_description: "Install conda"
+    options:
+      conda_folder:
+        description:
+        - "The folder where conda will be installed"
+        - (~ expands to the user's home directory)
+        type: str
+        default: "~/.conda"
+      conda_installer_url:
+        description:
+        - "the url to the conda installer"
+        type: str
+        default: https://github.com/conda-forge/miniforge/releases/download/4.14.0-0/Mambaforge-4.14.0-0-Linux-x86_64.sh
+      conda_installer_checksum:
+        description:
+        - "the sha256 checksum of the installer"
+        type: str
+        default: sha256:d47b78b593e3cf5513bafbfa6a51eafcd9f0e164c41c79c790061bb583c82859
+      conda_download_timeout:
+        description:
+        - "the timeout for the installer"
+        type: int
+        default: 300
+      conda_executable:
+        description:
+        - "the name of the conda executable to use for `[conda|mamba] init`"
+        type: str
+        default: mamba
+      conda_activate_alias:
+        description:
+        - "Create an alias command for `conda activate`"
+        type: str
+        default: ""

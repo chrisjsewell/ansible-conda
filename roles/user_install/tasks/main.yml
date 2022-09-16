@@ -1,0 +1,49 @@
+- name: Expand the conda folder path
+  expandpath:
+    path: "{{ conda_folder }}"
+  register: _conda_folder_expanded
+
+- name: Set internal variables
+  set_fact:
+    _conda_folder: "{{ _conda_folder_expanded.path }}"
+    _conda_installer_sh: tmp/conda_installer.sh
+    _conda_executable: "{{ _conda_folder_expanded.path }}/bin/{{ conda_executable }}"
+
+- name: "check for {{ _conda_executable }}"
+  ansible.builtin.stat:
+    path: "{{ _conda_executable }}"
+  changed_when: false
+  register: conda_binary
+
+- when: not conda_binary.stat.exists
+  block:
+  - name: "download: {{ conda_installer_url }}"
+    ansible.builtin.get_url:
+      url: "{{ conda_installer_url }}"
+      dest: "{{ _conda_installer_sh }}"
+      timeout: "{{ conda_download_timeout }}"
+      checksum: "{{ conda_installer_checksum }}"
+      mode: 0755
+
+  - name: "run: {{ conda_installer_url }}"
+    ansible.builtin.shell: bash {{ _conda_installer_sh }} -b -p {{ _conda_folder }}
+    args:
+      creates: "{{ _conda_folder }}"
+
+  - name: "Initialise conda"
+    ansible.builtin.command: "{{ _conda_executable }} init"
+    changed_when: false
+
+  always:
+  - name: deleting conda installer...
+    ansible.builtin.file:
+      path: "{{ _conda_installer_sh }}"
+      state: absent
+
+- name: Create aliases for conda activate
+  when: conda_activate_alias
+  ansible.builtin.blockinfile:
+    path: "~/.bashrc"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK (conda)"
+    block: |
+      alias {{ conda_activate_alias }}="conda activate"

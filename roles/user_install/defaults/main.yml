@@ -1,0 +1,8 @@
+# defaults file for install
+
+conda_folder: "~/.conda"
+conda_installer_url: https://github.com/conda-forge/miniforge/releases/download/4.14.0-0/Mambaforge-4.14.0-0-Linux-x86_64.sh
+conda_installer_checksum: sha256:d47b78b593e3cf5513bafbfa6a51eafcd9f0e164c41c79c790061bb583c82859
+conda_executable: mamba
+conda_download_timeout: 300
+conda_activate_alias: ""

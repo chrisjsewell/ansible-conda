@@ -1,0 +1,22 @@
+- name: Converge
+  hosts: all
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  pre_tasks:
+  - name: Add test user
+    ansible.builtin.user:
+      name: test
+      shell: /bin/bash
+  - name: create ansible tmp dir for user
+    become: true
+    become_user: test
+    ansible.builtin.file:
+      path: /home/test/.ansible/tmp
+      state: directory
+
+  roles:
+  - role: "chrisjsewell.conda.user_install"
+    become: true
+    become_user: test

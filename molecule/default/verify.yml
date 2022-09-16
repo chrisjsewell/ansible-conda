@@ -1,0 +1,28 @@
+- name: Verify
+  hosts: all
+  become: true
+
+  tasks:
+
+  - name: Create a new Conda environment
+    become: true
+    become_user: test
+    chrisjsewell.conda.install_pkgs:
+      packages:
+      - python=3.9
+      env: test_env
+
+  - name: Get the packages in the Conda environment
+    become: true
+    become_user: test
+    chrisjsewell.conda.list_pkgs:
+      env: test_env
+      regex: python
+    register: test_env_pkgs
+
+  - name: Check the packages in the new Conda environment
+    assert:
+      that:
+      - test_env_pkgs.list | length == 1
+      - test_env_pkgs.list[0].name == "python"
+      - test_env_pkgs.list[0].version.startswith("3.9")

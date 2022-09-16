@@ -1,2 +1,6 @@
 # .gitignore for ansible collection
+.DS_STORE
+.tox/
 dist/
+.token.txt
+tests/output/
