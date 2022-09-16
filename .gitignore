@@ -1,0 +1,2 @@
+# .gitignore for ansible collection
+dist/
