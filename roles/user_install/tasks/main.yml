@@ -6,7 +6,6 @@
 - name: Set internal variables
   set_fact:
     _conda_folder: "{{ _conda_folder_expanded.path }}"
-    _conda_installer_sh: tmp/conda_installer.sh
     _conda_executable: "{{ _conda_folder_expanded.path }}/bin/{{ conda_executable }}"
 
 - name: "check for {{ _conda_executable }}"
@@ -17,16 +16,22 @@
 
 - when: not conda_binary.stat.exists
   block:
+  - name: Create temporary file for installer
+    ansible.builtin.tempfile:
+      state: file
+      suffix: temp
+    register: tempfile_1
+
   - name: "download: {{ conda_installer_url }}"
     ansible.builtin.get_url:
       url: "{{ conda_installer_url }}"
-      dest: "{{ _conda_installer_sh }}"
+      dest: "{{ tempfile_1.path }}"
       timeout: "{{ conda_download_timeout }}"
       checksum: "{{ conda_installer_checksum }}"
       mode: 0755
 
   - name: "run: {{ conda_installer_url }}"
-    ansible.builtin.shell: bash {{ _conda_installer_sh }} -b -p {{ _conda_folder }}
+    ansible.builtin.shell: bash {{ tempfile_1.path }} -b -p {{ _conda_folder }}
     args:
       creates: "{{ _conda_folder }}"
 
@@ -37,8 +42,9 @@
   always:
   - name: deleting conda installer...
     ansible.builtin.file:
-      path: "{{ _conda_installer_sh }}"
+      path: "{{ tempfile_1.path }}"
       state: absent
+    when: tempfile_1.path is defined
 
 - name: Create aliases for conda activate
   when: conda_activate_alias
