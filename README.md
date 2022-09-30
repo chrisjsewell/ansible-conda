@@ -172,7 +172,7 @@ See: <https://docs.ansible.com/ansible/latest/dev_guide/developing_collections.h
 
 ### Testing
 
-To run `aiida-test` sanity tests:
+To run `ansible-conda` sanity tests:
 
 ```bash
 ansible-test sanity --target-python=3.10 --skip-test metaclass-boilerplate --skip-test future-import-boilerplate
