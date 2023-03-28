@@ -19,7 +19,7 @@
   - name: Create temporary file for installer
     ansible.builtin.tempfile:
       state: file
-      suffix: temp
+      suffix: temp.sh
     register: tempfile_1
 
   - name: "download: {{ conda_installer_url }}"
