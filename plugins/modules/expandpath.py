@@ -17,8 +17,8 @@ options:
 """
 
 EXAMPLES = """
-- name: install packages via Conda
-  chrisjsewell.conda.expand_path:
+- name: Expand the remote path
+  chrisjsewell.conda.expandpath:
     path: ~/test
   register: result
 
