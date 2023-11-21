@@ -59,7 +59,7 @@ variables:
 
 ## Modules
 
-### `chrisjsewell.conda.install_pks`
+### `chrisjsewell.conda.install_pkgs`
 
 Install conda packages, into an existing or new environment.
 
@@ -67,7 +67,7 @@ Install conda packages, into an existing or new environment.
 - name: Install Conda packages
   become: true
   become_user: user_name
-  chrisjsewell.conda.install_pks:
+  chrisjsewell.conda.install_pkgs:
     env: myenv
     packages:
     - python=3.9
